@@ -32,17 +32,17 @@ public class Main {
 
         UsuarioService usuarioService = new UsuarioService();
         AuthService authService = new AuthService(textEncryptor);
-        CockraochService cockraochService = new CockraochService(ds);
-        cockraochService.init();
+//        CockraochService cockraochService = new CockraochService(ds);
+//        cockraochService.init();
 
         //------------------------------------CREATION------------------------------//
         addInfo(usuarioService);
         //--------------------------------------------------------------------------//
 
         new UsuarioController(app, usuarioService).applyRoutes();
-        new AuthController(app, usuarioService, authService, cockraochService).applyRoutes();
+        new AuthController(app, usuarioService, authService).applyRoutes();
 
-        app.get("/", ctx -> ctx.redirect("/index.html"));
+        app.get("/", ctx -> ctx.render("/public/index.html"));
     }
 
     public static void addInfo(UsuarioService usuarioService) {

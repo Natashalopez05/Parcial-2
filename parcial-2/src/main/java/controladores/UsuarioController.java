@@ -1,9 +1,10 @@
 package controladores;
+
 import encapsulaciones.Usuario;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.UploadedFile;
-import servicios.CockraochService;
+//import services.CockraochService;
 import servicios.UsuarioService;
 import util.BaseController;
 
@@ -17,6 +18,7 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class  UsuarioController extends BaseController {
     private final UsuarioService usuarioService;
+
 
     public UsuarioController(Javalin app, UsuarioService usuarioService) {
         super(app);
@@ -34,9 +36,10 @@ public class  UsuarioController extends BaseController {
         ctx.sessionAttribute("usuario_autoDelete", null);
         List<Usuario> usuarios = usuarioService.findAll();
 
-        Map<String, Object> modelo =  setModelo(
-                "usuarios", usuarios,
-                "usuario_autoDelete", usuario_autoDelete);
+
+        Map<String, Object> modelo = new HashMap<>();
+        modelo.put("usuarios", usuarios);
+        modelo.put("usuario_autoDelete", usuario_autoDelete);
 
         ctx.render("/public/templates/usuariosLista.html", modelo);
     }
@@ -48,7 +51,7 @@ public class  UsuarioController extends BaseController {
         Map<String, Object> modelo = setModelo(
                 "usuario", usuario);
 
-        ctx.render("/public/templates/usuarioListar.html", modelo);
+        ctx.render("/public/templates/usuariosLista.html", modelo);
     }
 
     public void crear(Context ctx) {
@@ -64,8 +67,9 @@ public class  UsuarioController extends BaseController {
         boolean supervisor = ctx.formParam("supervisor") != null;
         boolean encuestador = ctx.formParam("encuestador") != null;
 
+
         usuarioService.create(username, nombre, password, supervisor, encuestador);
-        ctx.redirect("/usuariosListar" + username);
+        ctx.redirect("/registrar/" + username);
     }
 
     public void editar(Context ctx) {
@@ -76,7 +80,7 @@ public class  UsuarioController extends BaseController {
         boolean encuestador = ctx.formParam("encuestador") != null;
 
         usuarioService.modify(username, nombre, password, supervisor, encuestador);
-        ctx.redirect("/usuariosListar" + username);
+        ctx.redirect("/registrar/" + username);
     }
 
     public void eliminar(Context ctx) {
@@ -86,23 +90,23 @@ public class  UsuarioController extends BaseController {
         assert usuarioLogueado != null;
         if(usuarioLogueado.getUsername().equals(username)) {
             ctx.sessionAttribute("usuario_autoDelete", "No puedes eliminarte a ti mismo.");
-            ctx.redirect("/usuariosListar");
+            ctx.redirect("/registrar");
             return;
         }
 
         usuarioService.desactivar(username);
-        ctx.redirect("/usuariosListar");
+        ctx.redirect("/registrar");
     }
 
     @Override
     public void applyRoutes() {
-        app.routes(() -> path("/usuariosListar", () -> {
+        app.routes(() -> path("/registrar", () -> {
             before("/", this::proteger);
             get("/", this::listar);
             post("/", this::crear);
             post("/edit/{username}", this::editar);
             before("/{username}", this::proteger);
-            get("/{username}", this::listarUno);
+            get("/{username}", this::listar);
             put("/{id}", this::editar);
             delete("/{username}", this::eliminar);
         }));
