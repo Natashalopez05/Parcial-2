@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formularios</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="../css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<body class="sb-nav-fixed">
+
+<div id="layoutSidenav_content">
+    <main>
+        <h1 class="mt-4">Formularios</h1>
+        <a class="btn btn-primary" href="/index.html">Home</a>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Lista de Formularios</li>
+        </ol>
+        <div class="card mb-4">
+            <div class="card-body">Aquí se muestran los Encuestados</div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i> Tabla de Encuestados
+                <a class="btn btn-primary" href="/templates/formulario.html">Encuestar </a>
+            </div>
+            <div class="card-body">
+                <table id="datatablesSimple" class="table">
+                    <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Educacion</th>
+                        <th>Sector</th>
+                        <th>Encuestador</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="formulario: ${formularios}">
+                        <td th:text="${formulario != null ? formulario.nombre : ''}"></td>
+                        <td th:text="${formulario != null ? formulario.apellido : ''}"></td>
+                        <td th:text="${formulario != null ? formulario.educacion : ''}"></td>
+                        <td th:text="${formulario != null ? formulario.sector : ''}"></td>
+                        <td th:text="${formulario != null && formulario.usuario != null ? formulario.usuario.nombre : ''}"></td>
+                        <td th:text="${formulario != null && formulario.usuario != null ? formulario.usuario.nombre : ''}"></td>
+                        <td>
+                            <div>
+                                <button onclick="editarFormulario(this)" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editar" data-nombre="${formulario != null ? formulario.nombre : ''}" data-apellido="${formulario != null ? formulario.apellido : ''}" data-educacion="${formulario != null ? formulario.educacion : ''}" data-sector="${formulario != null ? formulario.sector : ''}">Editar</button>
+                                <button th:attr="formulario=${formulario != null ? formulario.id : ''}" onclick="sendDelete(this.getAttribute('formulario'))" class="btn btn-danger text-start">Eliminar</button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <script th:inline="javascript">
+
+                    function sendDelete(url) {
+                        const xhttp = new XMLHttpRequest();
+                        xhttp.open("DELETE", url, true);
+                        xhttp.onload = () => {
+                            let responseURL = xhttp.responseURL;
+                            window.location.replace(responseURL);
+                        };
+                        xhttp.send();
+                        setTimeout(() => {
+                            window.location.replace("/formularios/");
+                        }, 1000);
+                    }
+                    function editarFormulario(button) {
+                        var nombre = button.getAttribute('data-nombre');
+                        var apellido = button.getAttribute('data-apellido');
+                        var educacion = button.getAttribute('data-educacion');
+                        var sector = button.getAttribute('data-sector');
+
+                        document.getElementById('nombreEditar').value = nombre;
+                        document.getElementById('apellidoEditar').value = apellido;
+                        document.getElementById('miComboBoxEditar').value = educacion;
+                        document.getElementById('sectorEditar').value = sector;
+                    }
+
+                    function guardarFormularioEditado() {
+                        var nombre = document.getElementById('nombreEditar').value;
+                        var apellido = document.getElementById('apellidoEditar').value;
+                        var educacion = document.getElementById('miComboBoxEditar').value;
+                        var sector = document.getElementById('sectorEditar').value;
+
+                        fetch('/formulario/editar', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                nombre: nombre,
+                                apellido: apellido,
+                                educacion: educacion,
+                                sector: sector
+                            })
+                        })
+                            .then(response => {
+                                alert('¡Formulario editado exitosamente!');
+                            })
+                            .catch(error => {
+                                console.error('Error al editar el formulario:', error);
+                            });
+                    }
+                </script>
+            </div>
+
+            <div class="modal fade" id="editar" tabindex="-1" aria-labelledby="usuarioModal" aria-hidden="true">
+                <form method="post" action="#" onsubmit="guardarFormularioEditado(); return true;">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Formulario</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3 mb-md-0">
+                                            <input name="nombre" class="form-control" id="nombreEditar"  th:value="${formulario != null ? formulario.nombre : ''}"  type="text" placeholder="Enter your first name" />
+                                            <label for="nombreEditar">Nombre</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input name="apellido" class="form-control" id="apellidoEditar" th:value="${formulario != null ? formulario.apellido: ''}" type="text" placeholder="Enter your last name" />
+                                            <label for="apellidoEditar">Apellido</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="miComboBoxEditar">Educación</label>
+                                    <select name="educacion" class="form-select" id="miComboBoxEditar" th:value="${formulario != null ? formulario.educacion: ''}">
+                                        <option value="Basico">Basico</option>
+                                        <option value="Medio">Medio</option>
+                                        <option value="Grado Universitario">Grado Universitario</option>
+                                        <option value="Postgrado">Postgrado</option>
+                                        <option value="Doctorado">Doctorado</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input name="sector" class="form-control" id="sectorEditar"  th:value="${formulario != null ? formulario.sector: ''}" type="text" placeholder="Enter your last name" />
+                                        <label for="sectorEditar">Sector</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3 mb-md-0">
+                                        <input class="form-control" id="username" type="text" th:value="${formulario != null ? session.username: ''}" readonly />
+                                        <label for="username">Encuestador</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Guardar Formulario</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer class="py-4 bg-light mt-auto">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center justify-content-between small">
+            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="../js/scripts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="../js/datatables-simple-demo.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</body>
+</html>

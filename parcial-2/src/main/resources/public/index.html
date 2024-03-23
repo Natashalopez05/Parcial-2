@@ -67,7 +67,11 @@
                                         <nav class="sb-sidenav-menu-nested nav">
                                             <div >
                                                 <a class="nav-link" href="templates/register.html">Register</a>
-                                                <a class="nav-link" href="templates/usuariosLista.html">Users</a>
+                                                <a  class="nav-link"  href = "/templates/usuariosLista.html" >Users</a>
+<!--                                                que aparezcan los usuario registrados en la tabla-->
+
+
+
                                             </div>
                                         </nav>
                                     </div>
@@ -75,11 +79,11 @@
                             </div>
 
         <div class="sb-sidenav-menu-heading">Addons</div>
-                            <a class="nav-link" href="templates/charts.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Charts
+                            <a th:if="${session.usuario and ((session.usuario.supervisor) or (session.usuario.encuestador))}" class="nav-link" href="templates/formulario.html">
+                                <div class="sb-nav-link-icon"></div>
+                               Formulario Zona Norte
                             </a>
-                            <a class="nav-link" href="templates/tables.html">
+                            <a class="nav-link" href="templates/formulariosLista.html">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Tables
                             </a>
@@ -667,5 +671,15 @@
         <script src="assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
+<!--        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
+<!--        <script>-->
+<!--            $(document).ready(function(){-->
+<!--                $("#usersButton").click(function(event){-->
+<!--                    event.preventDefault();-->
+<!--                    console.log("Button clicked");-->
+<!--                    $("#usersTable").load("/usuariosLista");-->
+<!--                });-->
+<!--            });-->
+<!--        </script>-->
     </body>
 </html>

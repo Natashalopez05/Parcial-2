@@ -12,6 +12,14 @@ public class Usuario implements Serializable {
     private boolean encuestador;
     private boolean active;
 
+    public Usuario(String username, String nombre, String password, boolean supervisor, boolean encuestador) {
+        this.username = username;
+        this.nombre = nombre;
+        this.password = password;
+        this.supervisor = supervisor;
+        this.encuestador = encuestador;
+        this.active = true;
+    }
 
     public Usuario() {
         this.active = true;

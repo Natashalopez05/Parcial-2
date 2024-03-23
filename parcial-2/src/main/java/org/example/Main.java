@@ -32,6 +32,7 @@ public class Main {
 
         UsuarioService usuarioService = new UsuarioService();
         AuthService authService = new AuthService(textEncryptor);
+        FormularioService formularioService = new FormularioService();
 //        CockraochService cockraochService = new CockraochService(ds);
 //        cockraochService.init();
 
@@ -41,6 +42,7 @@ public class Main {
 
         new UsuarioController(app, usuarioService).applyRoutes();
         new AuthController(app, usuarioService, authService).applyRoutes();
+        new FormularioController(app, formularioService).applyRoutes();
 
         app.get("/", ctx -> ctx.render("/public/index.html"));
     }
@@ -51,6 +53,8 @@ public class Main {
         Usuario usuario = usuarioService.create("admin", "Administrador", "admin", true, false);
         //Encuestador
         Usuario usuario1 = usuarioService.create("vladi", "Vladimir", "1234", false, true);
+        //Formulario
+        Formulario formulario = new Formulario("Vladimir", "Lopez", "Reparto del Este", "Basico");
 
     }
 

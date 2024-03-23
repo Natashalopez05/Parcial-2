@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -15,8 +15,10 @@
 
     <div id="layoutSidenav_content">
         <main>
-            <div class="container-fluid px-4">
                     <h1 class="mt-4">Usuarios</h1>
+                    <a class="nav-link" href="/index.html">
+                        Home
+                    </a>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Lista de Usuarios</li>
                     </ol>
@@ -53,7 +55,6 @@
                             </table>
                         </div>
                     </div>
-                </div>
         </main>
         <footer class="py-4 bg-light mt-auto">
             <div class="container-fluid px-4">
@@ -67,7 +68,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="../js/scripts.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-<script src="../js/datatables-simple-demo.js"></script>
+<script src="../js/datatables-simple-demo.js"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </body>
 </html>
 
