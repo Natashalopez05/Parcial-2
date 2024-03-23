@@ -68,9 +68,12 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="text-center">
-                                                <button type="submit" class="btn btn-primary">Guardar Formulario</button>
-                                            </div>
+
+                                                <input type="hidden" id="latitud" name="latitud" />
+                                                <input type="hidden" id="longitud" name="longitud" />
+                                                <div class="text-center">
+                                                    <button type="submit" class="btn btn-primary">Guardar Formulario</button>
+                                                </div>
 
                                         </form>
                                     </div>
@@ -92,5 +95,20 @@
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="../js/scripts.js"></script>
+      <script>
+          // Obtener la ubicación del cliente
+      navigator.geolocation.getCurrentPosition(function(position) {
+          var latitud = position.coords.latitude;
+          var longitud = position.coords.longitude;
+
+          console.log('Ubicación del cliente obtenida:');
+          console.log('Latitud:', latitud);
+          console.log('Longitud:', longitud);
+
+          document.getElementById('latitud').value = latitud;
+          document.getElementById('longitud').value = longitud;
+      }, function(error) {
+          console.error('Error al obtener la ubicación del cliente:', error.message);
+      });</script>
     </body>
 </html>

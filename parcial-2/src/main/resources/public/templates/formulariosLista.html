@@ -7,7 +7,9 @@
     <title>Formularios</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="../css/styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body class="sb-nav-fixed">
 
@@ -54,6 +56,27 @@
                     </tr>
                     </tbody>
                 </table>
+                <div id = "mapid" style="height: 600px;"></div>
+                <script>
+                    var map = L.map('mapid').setView([18.7357, -70.1627], 8);
+                    var formularios = [];
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    }).addTo(map);
+
+                    L.marker([18.7357, -70.1627]).addTo(map)
+                        .bindPopup('Santo Domingo<br>Capital de República Dominicana')
+                        .openPopup();
+
+                    for (var i = 0; i < formularios.length; i++) {
+                        var formulario = formularios[i];
+                        L.marker([formulario.latitud, formulario.longitud]).addTo(map)
+                            .bindPopup('Nombre: ' + formulario.nombre + '<br>' +
+                                'Apellido: ' + formulario.apellido);
+                    }
+                </script>
                 <script th:inline="javascript">
 
                     function sendDelete(url) {
@@ -105,6 +128,7 @@
                                 console.error('Error al editar el formulario:', error);
                             });
                     }
+
                 </script>
             </div>
 

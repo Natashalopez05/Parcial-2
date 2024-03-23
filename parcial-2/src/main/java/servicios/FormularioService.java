@@ -2,6 +2,7 @@ package servicios;
 
 import encapsulaciones.Formulario;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 import util.BaseServiceDatabase;
 import java.util.List;
@@ -69,6 +70,19 @@ public class FormularioService  extends BaseServiceDatabase<Formulario>{
             return this.createInDatabase(formulario);
         }
     }
-
+    public Formulario findByNameAndApellido(String nombre, String apellido) {
+        EntityManager entityManager = this.getEntityManager();
+        try {
+            Query query = entityManager.createQuery("SELECT f FROM Formulario f WHERE f.nombre = :nombre AND f.apellido = :apellido");
+            query.setParameter("nombre", nombre);
+            query.setParameter("apellido", apellido);
+            Formulario formulario = (Formulario) query.getSingleResult();
+            return formulario;
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            entityManager.close();
+        }
+    }
 
 }

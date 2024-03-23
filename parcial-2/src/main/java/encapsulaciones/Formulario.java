@@ -20,6 +20,8 @@ public class Formulario implements Serializable {
     @ManyToOne
     private Usuario usuario;
 
+    private Ubicacion ubicacion;
+
     public Formulario( String nombre, String apellido, String sector, String educacion) {
 
         this.nombre = nombre;
@@ -79,4 +81,10 @@ public class Formulario implements Serializable {
     public String toString() {
         return "Formulario{" + "nombre=" + nombre + ", apellido=" + apellido + ", educacion"+ educacion+ ", sector=" + sector + ", usuario=" + usuario + '}';
     }
+
+
+    public void setUbicacion(Ubicacion ubicacion) {
+        this.ubicacion =   ubicacion;
+    }
+
 }

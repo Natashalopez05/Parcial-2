@@ -6,6 +6,7 @@
 
         <class>encapsulaciones.Usuario</class>
         <class>encapsulaciones.Formulario</class>
+        <class>encapsulaciones.Ubicacion</class>
 
 
         <properties>
