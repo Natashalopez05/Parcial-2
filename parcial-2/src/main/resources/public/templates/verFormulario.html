@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formularios</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="../css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+</head>
+<body >
+    <main>
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <section th:if="${formulario}" class="d-flex flex-column w-75 justify-content-center align-items-center">
+                <article class="w-100">
+                    <span class="d-flex justify-content-center align-items-center">
+                         <h1>Datos del Formulario</h1>
+                    </span>
+                    <h1 class="text-center" th:text="${formulario.nombre}"></h1>
+                    <strong>Nombre:</strong><p th:text="${formulario.nombre}"></p>
+                    <strong>Apellido: </strong><p th:text="${formulario.apellido}"></p>
+                    <strong >Sector: </strong><p th:text="${formulario.sector}"></p>
+                    <strong>Educacion: </strong><p th:text="${formulario.educacion}"></p>
+
+                </article>
+
+                <div>
+                    <button th:attr="formulario=${formulario != null ? formulario.id : ''}" onclick="sendDelete(this.getAttribute('formulario'))" class="btn btn-danger text-start">Eliminar</button>
+                    <button class="btn btn-secondary text-start" data-bs-toggle="modal" data-bs-target="#editar">Editar</button>
+                </div>
+
+                <script th:inline="javascript">
+
+                    function sendDelete(url) {
+                        const xhttp = new XMLHttpRequest();
+                        xhttp.open("DELETE", url, true);
+                        xhttp.onload = () => {
+                            let responseURL = xhttp.responseURL;
+                            window.location.replace(responseURL);
+                        };
+                        xhttp.send();
+                        setTimeout(() => {
+                            window.location.replace("/formularios/");
+                        }, 1000);
+                    }
+
+                </script>
+            </section>
+
+            <div class="end-0 p-4 text-center" >
+                <a href="/formularios" class="btn btn-secondary">Back</a>
+            </div>
+
+
+
+            <!--Modal -->
+            <div class="modal fade" id="editar" tabindex="-1" aria-labelledby="usuarioModal" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Formulario</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST" th:action="'edit/' + ${formulario.id}">
+                                    <div class="mb-3">
+                                        <label for="nombre" class="form-label">Nombre</label>
+                                        <input name="nombre" type="text" class="form-control w-25" id="nombre" th:value="${formulario.nombre}" aria-describedby="nombreHelp" required>
+                                        <div id="nombreHelp" class="form-text">Nombre del usuario</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="apellido" class="form-label">Apellido</label>
+                                        <input name="apellido" type="text" class="form-control w-25" id="apellido" th:value="${formulario.apellido}" aria-describedby="apellidoHelp" required>
+                                        <div id="apellidoHelp" class="form-text">Apellido del usuario</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="sector" class="form-label">Sector</label>
+                                        <input name="sector" type="text" class="form-control w-25" id="sector" th:value="${formulario.sector}" aria-describedby="sectorHelp" required>
+                                        <div id="sectorHelp" class="form-text">Sector del usuario</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="educacion" class="form-label">Educacion</label>
+                                        <select name="educacion" class="form-select w-25" id="educacion" th:value="${formulario.educacion}" aria-describedby="educacionHelp" required>
+                                            <option value="Basico">Basico</option>
+                                            <option value="Medio">Medio</option>
+                                            <option value="Grado Universitario">Grado Universitario</option>
+                                            <option value="Postgrado">Postgrado</option>
+                                            <option value="Doctorado">Doctorado</option>
+                                        </select>
+                                        <div id="educacionHelp" class="form-text">Educacion del usuario</div>
+                                    </div>
+
+
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary">Guardar Formulario</button>
+                            </div>
+                                </form>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        </div>
+    </main>
+
+
+<footer class="py-4 bg-light mt-auto">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center justify-content-between small">
+            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="../js/scripts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="../js/datatables-simple-demo.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src = "../js/formularioListas.js"></script>
+
+</body>
+</html>

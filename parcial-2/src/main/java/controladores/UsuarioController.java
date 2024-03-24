@@ -67,8 +67,13 @@ public class  UsuarioController extends BaseController {
         boolean supervisor = ctx.formParam("supervisor") != null;
         boolean encuestador = ctx.formParam("encuestador") != null;
 
-
         usuarioService.create(username, nombre, password, supervisor, encuestador);
+        if(!supervisor && !encuestador){
+            ctx.status(400);
+            ctx.result("Error al crear el  encuestador: debe de tener un rol asignado");
+            return;
+        }
+
         ctx.redirect("/registrar/" + username);
     }
 

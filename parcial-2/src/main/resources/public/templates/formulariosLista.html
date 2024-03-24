@@ -48,145 +48,13 @@
                         <td th:text="${formulario != null && formulario.usuario != null ? formulario.usuario.nombre : ''}"></td>
                         <td th:text="${formulario != null && formulario.usuario != null ? formulario.usuario.nombre : ''}"></td>
                         <td>
-                            <div>
-                                <button onclick="editarFormulario(this)" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editar" data-nombre="${formulario != null ? formulario.nombre : ''}" data-apellido="${formulario != null ? formulario.apellido : ''}" data-educacion="${formulario != null ? formulario.educacion : ''}" data-sector="${formulario != null ? formulario.sector : ''}">Editar</button>
-                                <button th:attr="formulario=${formulario != null ? formulario.id : ''}" onclick="sendDelete(this.getAttribute('formulario'))" class="btn btn-danger text-start">Eliminar</button>
-                            </div>
+                        <td>
+                                <a class="btn btn-primary" th:href="@{/formularios/{id}(id=${formulario.id})}">Ver </a>
                         </td>
                     </tr>
                     </tbody>
                 </table>
                 <div id = "mapid" style="height: 600px;"></div>
-                <script>
-                    var map = L.map('mapid').setView([18.7357, -70.1627], 8);
-                    var formularios = [];
-
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 19,
-                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    }).addTo(map);
-
-                    L.marker([18.7357, -70.1627]).addTo(map)
-                        .bindPopup('Santo Domingo<br>Capital de República Dominicana')
-                        .openPopup();
-
-                    for (var i = 0; i < formularios.length; i++) {
-                        var formulario = formularios[i];
-                        L.marker([formulario.latitud, formulario.longitud]).addTo(map)
-                            .bindPopup('Nombre: ' + formulario.nombre + '<br>' +
-                                'Apellido: ' + formulario.apellido);
-                    }
-                </script>
-
-                <script th:inline="javascript">
-
-                    function sendDelete(url) {
-                        const xhttp = new XMLHttpRequest();
-                        xhttp.open("DELETE", url, true);
-                        xhttp.onload = () => {
-                            let responseURL = xhttp.responseURL;
-                            window.location.replace(responseURL);
-                        };
-                        xhttp.send();
-                        setTimeout(() => {
-                            window.location.replace("/formularios/");
-                        }, 1000);
-                    }
-                    function editarFormulario(button) {
-                        var nombre = button.getAttribute('data-nombre');
-                        var apellido = button.getAttribute('data-apellido');
-                        var educacion = button.getAttribute('data-educacion');
-                        var sector = button.getAttribute('data-sector');
-
-                        document.getElementById('nombreEditar').value = nombre;
-                        document.getElementById('apellidoEditar').value = apellido;
-                        document.getElementById('miComboBoxEditar').value = educacion;
-                        document.getElementById('sectorEditar').value = sector;
-                    }
-
-                    function guardarFormularioEditado() {
-                        var nombre = document.getElementById('nombreEditar').value;
-                        var apellido = document.getElementById('apellidoEditar').value;
-                        var educacion = document.getElementById('miComboBoxEditar').value;
-                        var sector = document.getElementById('sectorEditar').value;
-
-                        fetch('/formulario/editar', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                nombre: nombre,
-                                apellido: apellido,
-                                educacion: educacion,
-                                sector: sector
-                            })
-                        })
-                            .then(response => {
-                                alert('¡Formulario editado exitosamente!');
-                            })
-                            .catch(error => {
-                                console.error('Error al editar el formulario:', error);
-                            });
-                    }
-
-                </script>
-            </div>
-
-            <div class="modal fade" id="editar" tabindex="-1" aria-labelledby="usuarioModal" aria-hidden="true">
-                <form method="post" action="#" onsubmit="guardarFormularioEditado(); return true;">
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Formulario</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3 mb-md-0">
-                                            <input name="nombre" class="form-control" id="nombreEditar"  th:value="${formulario != null ? formulario.nombre : ''}"  type="text" placeholder="Enter your first name" />
-                                            <label for="nombreEditar">Nombre</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating">
-                                            <input name="apellido" class="form-control" id="apellidoEditar" th:value="${formulario != null ? formulario.apellido: ''}" type="text" placeholder="Enter your last name" />
-                                            <label for="apellidoEditar">Apellido</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="miComboBoxEditar">Educación</label>
-                                    <select name="educacion" class="form-select" id="miComboBoxEditar" th:value="${formulario != null ? formulario.educacion: ''}">
-                                        <option value="Basico">Basico</option>
-                                        <option value="Medio">Medio</option>
-                                        <option value="Grado Universitario">Grado Universitario</option>
-                                        <option value="Postgrado">Postgrado</option>
-                                        <option value="Doctorado">Doctorado</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input name="sector" class="form-control" id="sectorEditar"  th:value="${formulario != null ? formulario.sector: ''}" type="text" placeholder="Enter your last name" />
-                                        <label for="sectorEditar">Sector</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3 mb-md-0">
-                                        <input class="form-control" id="username" type="text" th:value="${formulario != null ? session.username: ''}" readonly />
-                                        <label for="username">Encuestador</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary">Guardar Formulario</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
             </div>
         </div>
     </main>
@@ -205,6 +73,8 @@
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
 <script src="../js/datatables-simple-demo.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src = "../js/formularioListas.js"></script>
 
 </body>
 </html>

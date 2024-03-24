@@ -30,6 +30,18 @@ public class FormularioController extends BaseController {
         ctx.render("/public/templates/formulariosLista.html", modelo);
     }
 
+    public void listarUno(Context ctx) {
+        Long id = Long.valueOf(ctx.pathParam("id"));
+        Formulario formulario = formularioService.dbFind(id);
+        if (formulario == null) {
+            ctx.status(400);
+            ctx.result("El formulario no existe");
+        } else {
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("formulario", formulario);
+            ctx.render("/public/templates/verFormulario.html", modelo);
+        }
+    }
     public void crear(Context ctx) {
         String nombre = ctx.formParam("nombre");
         String apellido = ctx.formParam("apellido");
@@ -85,6 +97,7 @@ public class FormularioController extends BaseController {
             ctx.status(400);
             ctx.result("ID de formulario inválido. Debe ser un número.");
         }
+        ctx.redirect("/formularios/");
     }
 
     public void editar(Context ctx) {
@@ -100,16 +113,21 @@ public class FormularioController extends BaseController {
             formulario.setSector(ctx.formParam("sector"));
             formularioService.dbModify(formulario);
             ctx.status(201);
-            ctx.result("Formulario modificado");
+           ctx.redirect("/formularios/");
         }
+    }
+    public void getFormulariosLista(Context ctx) {
+        List<Formulario> formularios = formularioService.findAll();
+        ctx.render("templates/formulariosLista.html", Map.of("formularios", formularios));
     }
 
     public void applyRoutes() {
         app.routes(() -> path("/formularios", () -> {
             get("/", this::listar);
+            get("/{id}", this::listarUno);
             post("/", this::crear);
             post("/edit/{id}", this::editar);
-            get("/{id}", this::listar);
+            post("/{id}", this::getFormulariosLista);
             put("/{id}", this::editar);
             delete("/{id}", this::eliminar);
         }));
